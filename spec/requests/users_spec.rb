@@ -20,9 +20,9 @@ describe "Users" do
       end
     end
     
-    describe "failure" do
+    describe "success" do
       
-      it "should not make a new user" do
+      it "should make a new user" do
         lambda do
           visit signup_path
           fill_in "Name",           :with => "Example User"
