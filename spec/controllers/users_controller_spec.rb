@@ -294,6 +294,12 @@ describe UsersController do
         delete :destroy, :id => @user
         response.should redirect_to(root_path)
       end
+      
+      it "should not have delete link" do
+        test_sign_in(@user)
+        get :index
+        response.should_not have_selector("a", :href => user_path(@user), :content => "delete")
+      end
     end
     
     describe "as an admin user" do
@@ -312,6 +318,17 @@ describe UsersController do
       it "should redirect to the users page" do
         delete :destroy, :id => @user
         response.should redirect_to(users_path)
+      end
+      
+      it "should have delete link" do
+        get :index
+        response.should have_selector("a", :href => user_path(@user), :content => "delete")
+      end
+      
+      it "should not be able to destroy themselves" do
+        lambda do
+          delete :destroy, :id => admin
+        end.should_not change(User, :count)
       end
     end
   end
