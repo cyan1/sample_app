@@ -260,5 +260,25 @@ describe User do
       @user.follow!(@followed)
       @followed.followers.should include(@user)
     end
+    
+    describe "associated with users" do
+      
+      before(:each) do
+        @follower = @user
+        @followed = Factory(:user, :email => Factory.next(:email))
+
+        @relationship = @follower.relationships.build(:followed_id => @followed.id)
+      end
+      
+      it "should destroy associated relationships for followers" do
+        @follower.destroy
+        Relationship.find_by_id(@relationship.id).should be_nil
+      end
+      
+      it "should destroy associated relationships for following" do
+        @followed.destroy
+        Relationship.find_by_id(@relationship.id).should be_nil
+      end
+    end
   end
 end
